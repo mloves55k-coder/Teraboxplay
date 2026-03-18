@@ -6,31 +6,56 @@ document.getElementById('playBtn').addEventListener('click', async function() {
     const title = document.getElementById('videoTitle');
     const dlBtn = document.getElementById('downloadBtn');
 
-    if (!inputUrl) return alert("Please paste a link!");
+    // 1. Basic Validation
+    if (!inputUrl) {
+        alert("Please paste a TeraBox link first!");
+        return;
+    }
 
+    // 2. UI Reset (Loading dikhana)
     loading.style.display = "block";
     playerCard.style.display = "none";
+    video.src = ""; // Purani video clear karna
 
     try {
-        // Ye line aapke api/index.py se connect karegi
-        const response = await fetch(`/api/extract?url=${encodeURIComponent(inputUrl)}`);
+        /* 3. API Call: 
+           Ye aapke Vercel backend (/api/extract) ko request bhejega 
+           jo humne vercel.json mein set kiya hai.
+        */
+        const apiUrl = `/api/extract?url=${encodeURIComponent(inputUrl)}`;
+        const response = await fetch(apiUrl);
+        
+        if (!response.ok) {
+            throw new Error("Server response was not OK");
+        }
+
         const data = await response.json();
 
-        if (data.list && data.list.length > 0) {
-            const file = data.list[0];
-            video.src = file.main_url;
-            title.innerText = file.filename;
-            dlBtn.href = file.main_url;
-            
+        // 4. Data Check (Check if video link exists)
+        if (data && data.list && data.list.length > 0) {
+            const fileData = data.list[0];
+            const directVideoUrl = fileData.main_url;
+
+            // Video aur Download button set karna
+            video.src = directVideoUrl;
+            title.innerText = fileData.filename || "TeraBox Video";
+            dlBtn.href = directVideoUrl;
+
+            // UI Update (Player dikhana)
             loading.style.display = "none";
             playerCard.style.display = "block";
-            video.play();
-        } else {
-            alert("Video nahi mil saki. Link check karein.");
+            
+            // Auto-play attempt
+            video.play().catch(e => console.log("Auto-play blocked by browser. Click play manually."));
+        } 
+        else {
             loading.style.display = "none";
+            alert("Video nahi mil saki! Shayad link expire ho gaya hai ya private hai.");
         }
-    } catch (e) {
+
+    } catch (error) {
+        console.error("Error fetching data:", error);
         loading.style.display = "none";
-        alert("Server Error! Vercel logs check karein.");
+        alert("Server Error: Backend se rabta nahi ho pa raha. Vercel dashboard check karein.");
     }
 });
