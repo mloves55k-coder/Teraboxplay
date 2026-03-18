@@ -1,22 +1,18 @@
 from flask import Flask, request, jsonify
-from flask_cors import CORS
 import requests
 
 app = Flask(__name__)
-CORS(app)
 
-@app.route('/api/extract', methods=['GET'])
+@app.route('/api/extract')
 def extract():
-    target_url = request.args.get('url')
-    if not target_url:
-        return jsonify({"error": "No URL provided"}), 400
-    try:
-        # Stable worker bypasser
-        api_url = f"https://terabox-dl.qtcloud.workers.dev/api/get-info?url={target_url}"
-        r = requests.get(api_url, timeout=15)
-        return jsonify(r.json())
-    except Exception as e:
-        return jsonify({"error": str(e)}), 500
+    url = request.args.get('url')
+    if not url:
+        return jsonify({"error": "No URL"}), 400
+    
+    # Direct public bypasser call
+    api_url = f"https://terabox-dl.qtcloud.workers.dev/api/get-info?url={url}"
+    r = requests.get(api_url, timeout=10)
+    return jsonify(r.json())
 
-# Ye line Vercel ke liye sabse zaroori hai
+# Vercel compatibility
 app = app
