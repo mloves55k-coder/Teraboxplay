@@ -12,7 +12,7 @@ document.getElementById('playBtn').addEventListener('click', async function() {
     playerCard.style.display = "none";
 
     try {
-        // Replace with your Vercel URL after deployment
+        // Ye line aapke api/index.py se connect karegi
         const response = await fetch(`/api/extract?url=${encodeURIComponent(inputUrl)}`);
         const data = await response.json();
 
@@ -26,11 +26,11 @@ document.getElementById('playBtn').addEventListener('click', async function() {
             playerCard.style.display = "block";
             video.play();
         } else {
-            alert("API limit full or link invalid.");
+            alert("Video nahi mil saki. Link check karein.");
             loading.style.display = "none";
         }
     } catch (e) {
         loading.style.display = "none";
-        alert("Server Error! Try again.");
+        alert("Server Error! Vercel logs check karein.");
     }
 });
