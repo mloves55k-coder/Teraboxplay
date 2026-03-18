@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TeraBox Player - Ad-Free</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>TeraBox <span>Player</span></h1>
+        <p>Paste link below to stream or download</p>
+        
+        <div class="input-box">
+            <input type="text" id="teralink" placeholder="Paste TeraBox link here...">
+            <button id="playBtn">Play Now</button>
+        </div>
+
+        <div id="loading" class="loader">
+            <div class="spinner"></div>
+            <p>Bypassing TeraBox Server...</p>
+        </div>
+
+        <div id="player-card" class="player-card">
+            <video id="mainPlayer" controls></video>
+            <h3 id="videoTitle"></h3>
+            <a id="downloadBtn" href="#" target="_blank" class="dl-btn">Download Video</a>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
